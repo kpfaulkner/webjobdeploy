@@ -27,6 +27,10 @@ func main() {
     fmt.Printf("help me now.....\n")
     return
   }
+	if *username == "" || *password == "" || *appServiceName == "" || *webjobName == "" || *webjobExeName == ""{
+		fmt.Printf("Please check params\n")
+		return
+	}
 
   zipFilePath := ""
   var err error
