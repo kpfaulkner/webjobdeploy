@@ -8,9 +8,10 @@ import (
 	"os"
 )
 
+
 func main() {
 	fmt.Printf("Starting....\n")
-
+	var err error
 	username := flag.String("username", "", "Azure Username")
 	password := flag.String("password", "", "Azure Password")
 	zipFileName := flag.String("zipfilename", "", "Zip Filename")
@@ -20,6 +21,7 @@ func main() {
 	webjobExeName:= flag.String("webjobExeName", "", "Webjob executable filename. eg, mywebjob.exe")
 
 	help := flag.Bool("help", false, "help me Obi-Wan")
+	store := flag.Bool("store", false, "Store the username/password against the App Service Name so it can look it up later. Config is stored in HOME/.webjobdeploy/config.json")
 
   flag.Parse()
 
@@ -27,13 +29,27 @@ func main() {
     fmt.Printf("help me now.....\n")
     return
   }
-	if *username == "" || *password == "" || *appServiceName == "" || *webjobName == "" || *webjobExeName == ""{
-		fmt.Printf("Please check params\n")
+
+  // read config from ~/.webjobdeploy/config.json
+  // use passed in params to override anything from config.
+  config, err := helpers.GetConfig( *username, *password, *appServiceName, *webjobExeName, *webjobName)
+	if err != nil {
+		fmt.Printf("Cannot get config %s\n", err.Error())
 		return
 	}
 
-  zipFilePath := ""
-  var err error
+  if !helpers.ValidConfig(*config, *zipFileName, *uploadPath ) {
+	  fmt.Printf("Please check params\n")
+	  return
+  }
+
+
+	if *store {
+		helpers.StoreConfig( *config )
+	}
+
+	zipFilePath := ""
+
 
   // if upload path specified, that takes priority and we'll zip that up ready to use.
   if *uploadPath != "" {
