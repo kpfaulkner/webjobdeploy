@@ -77,9 +77,6 @@ func main() {
 	defer file.Close()
 
 	bufReader := bufio.NewReader(file)
-	if *username != "" && *password != "" && *appServiceName != "" && *webjobName != "" && *webjobExeName != ""{
-		helpers.Upload(*username, *password, *appServiceName, *webjobName, *webjobExeName,  bufReader)
-	}
-
+	helpers.Upload(*config,  bufReader)
 
 }
