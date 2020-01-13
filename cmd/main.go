@@ -46,6 +46,7 @@ func main() {
 
 	if *store {
 		helpers.StoreConfig( *config )
+		fmt.Printf("WARNING: The credentials are currently stored in plain text. If you think this was a mistake, delete the file ~/.webjobdeploy/config.json")
 	}
 
 	zipFilePath := ""
