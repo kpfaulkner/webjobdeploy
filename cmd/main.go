@@ -19,6 +19,7 @@ func main() {
 	appServiceName:= flag.String("appServiceName", "", "App Service name")
 	webjobName:= flag.String("webjobName", "", "Webjob name")
 	webjobExeName:= flag.String("webjobExeName", "", "Webjob executable filename. eg, mywebjob.exe")
+  deploy := flag.String("deploy", "webjob", "indicates if deploying webjob or app service. Values can be appservice or webjob")
 
 	help := flag.Bool("help", false, "help me Obi-Wan")
 	store := flag.Bool("store", false, "Store the username/password against the App Service Name so it can look it up later. Config is stored in HOME/.webjobdeploy/config.json")
@@ -43,14 +44,12 @@ func main() {
 	  return
   }
 
-
 	if *store {
 		helpers.StoreConfig( *config )
 		fmt.Printf("WARNING: The credentials are currently stored in plain text. If you think this was a mistake, delete the file ~/.webjobdeploy/config.json")
 	}
 
 	zipFilePath := ""
-
 
   // if upload path specified, that takes priority and we'll zip that up ready to use.
   if *uploadPath != "" {
@@ -76,8 +75,14 @@ func main() {
 	}
 
 	defer file.Close()
-
 	bufReader := bufio.NewReader(file)
-	helpers.Upload(*config,  bufReader)
+
+	switch *deploy {
+	case "webjob":
+		helpers.UploadWebjob(*config,  bufReader)
+	case "appservice":
+		helpers.UploadAppService(*config, bufReader)
+	}
+
 
 }

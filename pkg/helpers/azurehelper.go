@@ -18,7 +18,7 @@ func generateAuthHeader(username string, password string) string {
 	return base64.StdEncoding.EncodeToString([]byte(s))
 }
 
-func Upload( config AppServiceConfig, deployZipBytes io.Reader ) error {
+func UploadWebjob( config AppServiceConfig, deployZipBytes io.Reader ) error {
 	authHeader := generateAuthHeader(config.Username, config.Password)
 
 	urlTemplate := "https://%s.scm.azurewebsites.net/api/continuouswebjobs/%s"
@@ -42,3 +42,29 @@ func Upload( config AppServiceConfig, deployZipBytes io.Reader ) error {
 	fmt.Printf("return status code is %d\n", resp.StatusCode)
 	return nil
 }
+
+func UploadAppService( config AppServiceConfig, deployZipBytes io.Reader ) error {
+	authHeader := generateAuthHeader(config.Username, config.Password)
+
+	urlTemplate := "https://%s.scm.azurewebsites.net/api/zipdeploy"
+	url := fmt.Sprintf(urlTemplate, config.AppServiceName)
+
+	client := &http.Client{}
+	req, err := http.NewRequest("POST", url, deployZipBytes)
+	if err != nil {
+		fmt.Printf("Error while uploading %s\n", err.Error())
+		return err
+	}
+
+	req.Header.Add("Authorization", "Basic " +authHeader)
+	req.Header.Add("Content-type", "application/zip")
+	//req.Header.Add("Content-Disposition", fmt.Sprintf("attachment; filename=%s", config.WebjobExeName))
+	resp, err := client.Do(req)
+	if err != nil {
+		fmt.Printf("error on post %s\n", err.Error())
+		panic(err)
+	}
+	fmt.Printf("return status code is %d\n", resp.StatusCode)
+	return nil
+}
+
