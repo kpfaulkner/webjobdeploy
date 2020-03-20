@@ -17,3 +17,4 @@ Will zip and upload from c:\temp\webjob:
 Assuming you've already zipped it:
 .\cmd.exe -username "myusername" -password "mypassword" -appServiceName "myappserviceplanname" -webjobName "mywebjob1" -webjobExeName "dummywebjob.exe" -zipFileName "c:\temp\mywebjob.zip"
 
+Username/Password used here are deployment credentials and NOT the ones used for the Azure Portal. For creating credentials please see https://docs.microsoft.com/en-us/azure/app-service/deploy-configure-credentials#userscope

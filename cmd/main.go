@@ -12,14 +12,14 @@ import (
 func main() {
 	fmt.Printf("Starting....\n")
 	var err error
-	username := flag.String("username", "", "Azure Username")
-	password := flag.String("password", "", "Azure Password")
+	username := flag.String("username", "", "Azure Deployment Username")
+	password := flag.String("password", "", "Azure Deployment Password")
 	zipFileName := flag.String("zipfilename", "", "Zip Filename")
 	uploadPath := flag.String("uploadpath", "", "directory path to upload (if not using zip file)")
-	appServiceName:= flag.String("appServiceName", "", "App Service name")
+	appServiceName:= flag.String("appServiceName", "", "App Service/Azure Function name")
 	webjobName:= flag.String("webjobName", "", "Webjob name")
 	webjobExeName:= flag.String("webjobExeName", "", "Webjob executable filename. eg, mywebjob.exe")
-  deploy := flag.String("deploy", "webjob", "indicates if deploying webjob or app service. Values can be appservice or webjob")
+  deploy := flag.String("deploy", "webjob", "indicates if deploying webjob, azure function or app service. Values can be appservice, azurefunction or webjob")
 
 	help := flag.Bool("help", false, "help me Obi-Wan")
 	store := flag.Bool("store", false, "Store the username/password against the App Service Name so it can look it up later. Config is stored in HOME/.webjobdeploy/config.json")
@@ -80,7 +80,7 @@ func main() {
 	switch *deploy {
 	case "webjob":
 		helpers.UploadWebjob(*config,  bufReader)
-	case "appservice":
+	case "azurefunction","appservice":
 		helpers.UploadAppService(*config, bufReader)
 	}
 
