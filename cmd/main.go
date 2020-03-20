@@ -39,7 +39,7 @@ func main() {
 		return
 	}
 
-  if !helpers.ValidConfig(*config, *zipFileName, *uploadPath ) {
+  if !helpers.ValidConfig(*config, *zipFileName, *uploadPath, *deploy ) {
 	  fmt.Printf("Please check params\n")
 	  return
   }
