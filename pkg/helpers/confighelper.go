@@ -161,7 +161,7 @@ func StoreConfig( config AppServiceConfig) error {
 }
 
 // check if config is missing stuff.
-func ValidConfig( config AppServiceConfig, zipFileName string, uploadPath string) bool {
+func ValidConfig( config AppServiceConfig, zipFileName string, uploadPath string, deployType string) bool {
 	if config.Username == "" {
 		fmt.Printf("Invalid Username")
 		return false
@@ -177,16 +177,17 @@ func ValidConfig( config AppServiceConfig, zipFileName string, uploadPath string
 		return false
 	}
 
-	if config.WebjobExeName == "" {
-		fmt.Printf("Invalid WebjobExeName")
-		return false
-	}
+	if deployType == "webjob" {
+		if config.WebjobExeName == "" {
+			fmt.Printf("Invalid WebjobExeName")
+			return false
+		}
 
-	if config.WebjobName == "" {
-		fmt.Printf("Invalid WebjobName")
-		return false
+		if config.WebjobName == "" {
+			fmt.Printf("Invalid WebjobName")
+			return false
+		}
 	}
-
 	if zipFileName == "" && uploadPath == "" {
 		fmt.Printf("need a valid zipFileName or uploadPath")
 		return false
